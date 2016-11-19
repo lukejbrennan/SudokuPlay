@@ -1,0 +1,47 @@
+User's Perspective
+------------------
+From the user's perspective, part1 simply outputed two sudoku puzzles whenever the user gives them to the program. It doesn't appear to do much other than read in the files and display them in terminal.
+
+For part2, the user begins the program and enters a sudoku board to play. The program displays this board and then prompts the user to choose a row, a column and a number. If the user's choice is incorrect (out of range, overwrites an existing number other than zero, does not abide by rules of sudoku), then the program alerts the user and asks for a new imput. Finally, when the board is completed, the program congratulates the user, displays the finished board, and exits. 
+
+Programmer's Perspective
+------------------------
+Part2:
+The program relies on five basic functions: a constructor, a play function, a moveCheck function, a winCheck function and a display function. 
+
+The constructor asks for a file from the user and reads it in to a 2D vector which is the puzzle.
+
+The play function continues to run until the user has won the game. This is signified when winCheck outputs a true value. Within this while loop (that runs while the player has not yet won), there is another while loop that runs until the "move" of the user is valid. Inside this while loop, the program asks the user for a row, a column, and a number to place in the board. The program then checks to make sure that the inputs from the suer are appropriate (row, columns, and numbers are between 1 and 9). The program also ensures that the user isn't trying to place a number where the board already stores a non-zero number. Next, the play function calls the moveCheck function, which makes sure that the row, column, and number choice of the user does not conflict with the rules of sudoku (every row, column, and 3x3 minigrid can only contain a number 1-9 exactly once). If the user's choices pass this test, then the program escapes from the validity check while loop, and places the selected number in the selected position. Lastly, the play function calls the win function to check if the user has completely filled the board. If she has, then the program ends. If she hasn't, then the program iterates through the while loop (until victory has been achieved), and the user is once again prompted to choose a row, column, and a number to place in the board.
+
+The moveCheck function takes in three ints as input (the user's choice of row, column, and number) and outputs a true or false value. Outputting false implies that the user's input violated the rules of sudoku. There were three tests within this function:
+
+1. make sure every column had 1-9 no more than one time
+2. make sure every row had 1-9 no more than one time
+3. make sure every 3x3 grid had 1-9 no more than one time.
+
+The process for all of them were fairly similar. In general, I created a vector that kept the history of numbers within the group I was testing. numHistory in the 1st test for example, would hold all of the non zero integers in the current column. For the 1st test, I iterated through all of the rows and through all of the elements of the numHistory vector using nested for loops. If any of the elements in the user selected column and the first row matched with an element in numHistory (and if the match wasn't two 0s...) then the move was marked invalid and the work of the function was completed. If the element in the current position of the puzzle did not have a match in any of the elements of numHistory, then the value was stored to numHistroy. In this way, the vector was used to keep track of the numbers in the user selected column. The method for doing this with rows (the 2nd test) was exactly the same as doing it with columns with the exception that all rows needed to be switched to columns and vice versa. The process for the 3x3 mini-grid was similar to the first two tests. It uses numHistory in the same way, but it iterates through a tiny 3x3 grid instead of iterating through a column or row. To iterate through the grid, I moved the user selected row and column to the top left of the minigrid using mod and a while loop. Until the remainder of the row (or column) divided by 3 was zero, I subtracted one from the row (or column). Then, I iterated through this minigrid using nested for loops and the same logic for tests 1 and 2. If all three tests did not trip and return a 0 indicating that the move was not valid, then the function returned 1, indicating that the move was valid.
+
+
+
+The winCheck function is simple. It relies on the fact that the moveCheck function only let valid moves be placed to the board. This function then, only needs to check that there are no zeros on the board (which it does through nested for loops and an if statement). The function then displays a congratulatory message and prints the board (since the board is printed at the top of the play function). 
+
+The display function is also simple. It uses nested for loops to print each element of the board and a space after it for neatness (the constructor condensed the board from the input file into a board with no spaces). A new line is also printed after all the columns have been iterated through (to ensure that the board is actually a board and not just a long list of numbers). 
+
+Verification
+------------
+To verify part1, I simply plugged in both files into the program and made sure the program outputted the two Sudoku boards. 
+
+To verify part2, I played my sudoku game. I tested to make sure that I was not allowed to overwrite numbers that had already been placed on the board, I tested to make sure that only one instance of a number [1-9] could be placed in a particular column and in a particular row. I made sure that the user was inputting correct inputs (column, row, and number choice). I also tested a nearly completed sudoku board and made sure that the win function worked when I completed the board correctly. For almost all of these tests, I inputted cout statements in my code to let the user know when an incorect input was chosen or when a number was trying to be placed in an invalid location.
+
+Worked vs not so well
+----------------------
+I was a little frustrated with my templated part1 sudoku main.cpp file. I designed part1 such that the program asked the user to input a file (in the constructor). The problem with this is that the type of the puzzle was already declared in main.cpp. This required the user to input the correct file. As I wrote my main.cpp file, the user would have to input the integer file first and then the char file. I wonder if there is a way to avoid this requirement; it seems to defeat the purpose of templating. 
+
+Everything else though, seemed to work okay (after some trial and error.......) The actual templating in part1 was working well, and I believe that I thoroughly accounted for the correct and appropriate cases that could occur as the user fills out the Sudoku puzzle (in part2). 
+
+General "How" the templated Sudoku and part2 were implemented
+-------------------------------------------------------------
+templated Sudoku:
+As a templated Sudoku program, this program had both of it's functions (the constructor and the display function in the .h file with the necessary "template<typename T>" above them. 
+part2: see programmer's perspective... it's pretty thorough 
+
